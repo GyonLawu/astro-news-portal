@@ -1,17 +1,48 @@
 ---
+import { getCollection } from "astro:content";
+import MainLayout from "../layouts/MainLayout.astro";
+import Card from "../components/Card.astro";
+import { SEO } from 'astro-seo';
+import Slider from "../components/Slider.astro";
 
+const blogPosts = await getCollection('blog');
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="Home">
+	<SEO
+		slot='seo'
+		title='Astro News Portal - Daily News for Everyone'
+		description='Selamat datang di Portal Berita Astro - Tempat nyantai buat update berita tiap hari! Di sini kamu bisa tetap up to date dengan berita terbaru, topik seru, dan artikel menarik yang cocok buat semua orang. Yuk, jalan-jalan ke berbagai kategori dan temukan cerita yang bikin penasaran.'
+		twitter={{
+			creator: '@gyonlawu22936',
+			card: 'summary_large_image',
+		}}
+		openGraph={{
+			basic: {
+				type: 'website',
+				title: 'Astro News Portal - Daily News for Everyone',
+				image: '/ogImage_default.jpeg',
+			},
+			image: {
+				alt: 'Thumbnail',
+			},
+		}}
+	/>
+	
+<div style="margin-top: 56px;">
+	<Slider posts={blogPosts.filter((post) => post.data.isPinned)} />
+</div>
+	
+	<main class='container mt-content'>
+		<div class='row row-col-1 row-cols-md-3 g-4'>
+			{
+				blogPosts
+				.map((post) => (
+					<div class='col'>
+						<Card post={post} />
+					</div>					
+				))
+			}
+		</div>
+	</main>	
+</MainLayout>
